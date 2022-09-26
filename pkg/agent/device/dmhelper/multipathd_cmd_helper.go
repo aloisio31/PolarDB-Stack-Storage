@@ -96,13 +96,10 @@ func getMultipathParam(name string) (*MultipathParam, error) {
 	firstLineFields := strings.Fields(lines[0])
 	lenFields := len(firstLineFields)
 	if lenFields >= 4 {
-		ret.Wwid = firstLineFields[lenFields-4]
-		ret.Wwid = strings.TrimLeft(ret.Wwid, "(")
-		ret.Wwid = strings.TrimRight(ret.Wwid, ")")
+		ret.Wwid = strings.TrimRight(strings.TrimLeft(firstLineFields[1], "("), ")")
 		ret.Name = getRealVolumeName(ret.Wwid)
-		ret.Vendor = firstLineFields[lenFields-2]
-		ret.Product = firstLineFields[lenFields-1]
-		ret.Product = strings.TrimPrefix(ret.Product, device.CommaSign)
+		ret.Vendor = strings.Split(firstLineFields[3], ",")[0]
+		ret.Product = strings.Split(lines[0], ",")[1]
 	} else if lenFields >= 1 {
 		ret.Wwid = firstLineFields[0]
 		ret.Name = getRealVolumeName(ret.Wwid)

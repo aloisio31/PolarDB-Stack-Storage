@@ -17,14 +17,15 @@ package anticorrosion
 
 import (
 	"fmt"
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"polardb-sms/pkg/common"
 	smslog "polardb-sms/pkg/log"
 	"polardb-sms/pkg/manager/config"
 	"polardb-sms/pkg/protocol"
 	"time"
+
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
@@ -117,6 +118,10 @@ func BatchUpdateByEvents(batchEvent *protocol.BatchEvent) {
 			smslog.Infof("BatchUpdateByEvents: getWwidCmByNodeId err %s", err.Error())
 			return
 		}
+	}
+
+	if cm.Data == nil {
+		cm.Data = make(map[string]string)
 	}
 
 	var hasChanged = false
